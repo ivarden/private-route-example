@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Link, Switch } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { PrivateRoute } from "./PrivateRoute";
+
+const Home = () => <h1>Home</h1>;
+const PrivatePage = () => {
+  const { logOut } = useAuth();
+  return <button onClick={logOut}>Log out</button>;
+};
+const Login = () => {
+  const { logIn } = useAuth();
+  return <button onClick={logIn}>Log in</button>;
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/private-page">Private page</Link>
+        <Link to="/login">Login</Link>
+      </nav>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <PrivateRoute
+          path="/private-page"
+          redirectPath="/login"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <PrivatePage />
+        </PrivateRoute>
+        <Route path="/" component={Home} />
+      </Switch>
+    </>
   );
 }
 
